@@ -10,46 +10,59 @@ namespace Sudoku_Solver
 {
     class Solver
     {
-        private int size = 4;
-        //private TextBox[,] textBoxes;
-        //private Stack<TextBox[,]> previousTextBoxes = new Stack<TextBox[,]>();
+        private int size = 9;
+        private int[,] solution;
 
         public Solver()
         {
-            //this.textBoxes = textBoxes;
-        }
+            solution = new int[size, size];
+;        }
 
-        public bool Solve(int[,] _sudoku)
+        public bool Solve(int[,] _sudoku, int counter)
         {
-            //previousTextBoxes.Push((TextBox[,]) textBoxes.Clone());
             int[,] sudoku = new int[size, size];
             sudoku = (int[,])_sudoku.Clone();
+
+            Console.WriteLine(counter);
 
             int row, column = 0;
 
             int number = 0;
-            for (row = 0; number != -1 && row < size; ++row)
+            for (row = 0; number != -1 && row < size; row++)
             {
-                for (column = 0; number != -1 && column < size; ++column)
+                for (column = 0; number != -1 && column < size; column++)
                 {
                     number = sudoku[row, column];
+                    Console.WriteLine("Row:" + row + " Col: " + column + " Value: " + number + "    Counter: " + counter);
                 }
             }
             column--;
             row--;
             int i = 1;
-            while (i < size + 1)
+            bool solved = false;
+
+            while (i < size + 1 && !solved)
             {
                 sudoku[row, column] = i;
                 if (CheckGrid.Check(sudoku))
                 {
-                    if (Solve(sudoku))
+                    if (CheckGrid.IsSolved(sudoku))
+                    {
+                        solution = sudoku;
                         return true;
+                    }
+                    else
+                        solved = Solve(sudoku, counter + 1);
                 }
 
                 i++;
             }
-            return false;
+            return solved;
+        }
+
+        public int[,] GetSolution()
+        {
+            return solution;
         }
 
     }

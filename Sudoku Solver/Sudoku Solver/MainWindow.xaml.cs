@@ -21,31 +21,32 @@ namespace Sudoku_Solver
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        private TextBox[,] textBoxGrid = new TextBox[9,9];
+        private int size = 9;
+        private TextBox[,] textBoxGrid;
         private Solver solver;
 
         public MainWindow()
         {
+            textBoxGrid = new TextBox[size, size];
             InitializeComponent();
             Initialize();
         }
 
         public void Initialize()
         {
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < size; i++)
             {
                 sudokuGrid.RowDefinitions.Add(new RowDefinition());
                 sudokuGrid.ColumnDefinitions.Add(new ColumnDefinition());
             }
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < size; i++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < size; j++)
                 {
                     TextBox textBox = new TextBox();
                     textBox.Text = "";
-                    textBox.Width = 700 / 9;
-                    textBox.Height = 700 / 9;
+                    textBox.Width = 700 / size;
+                    textBox.Height = 700 / size;
                     textBox.TextAlignment = TextAlignment.Center;
                     textBox.FontSize = 60;
                     Grid.SetColumn(textBox, i);
@@ -72,8 +73,9 @@ namespace Sudoku_Solver
             if (IsValidGrid(sudoku))
             {
                 solver = new Solver();
-                if (solver.Solve(sudoku))
+                if (solver.Solve(sudoku, 0))
                 {
+                    ShowSolution();
                     MessageBox.Show("Solvable");
                 }
                 else
@@ -83,13 +85,25 @@ namespace Sudoku_Solver
             }
         }
 
+        private void ShowSolution()
+        {
+            int[,] solution = solver.GetSolution();
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    textBoxGrid[i, j].Text = solution[i, j].ToString();
+                }
+            }
+        }
+
         private int[,] GetSudokuArray(TextBox[,] textBoxGrid)
         {
-            int[,] sudoku = new int[9, 9];
+            int[,] sudoku = new int[size, size];
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < size; i++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < size; j++)
                 {
                     try
                     {

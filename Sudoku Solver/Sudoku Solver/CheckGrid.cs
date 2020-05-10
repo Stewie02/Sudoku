@@ -9,6 +9,19 @@ namespace Sudoku_Solver
 {
     public static class CheckGrid
     {
+
+        private static int size = 9;
+
+        public static bool IsSolved(int[,] sudoku)
+        {
+            foreach (int number in sudoku)
+            {
+                if (number == -1)
+                    return false;
+            }
+            return true;
+        }
+
         public static bool Check(int[,] sudoku)
         {
             if (!CheckRows(sudoku))
@@ -22,10 +35,10 @@ namespace Sudoku_Solver
 
         private static bool CheckRows(int[,] sudoku)
         {
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < size; i++)
             {
                 List<int> numbers = new List<int>();
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < size; j++)
                 {
                     if (sudoku[i, j] != -1)
                     {
@@ -41,10 +54,11 @@ namespace Sudoku_Solver
 
         private static bool CheckColumns(int[,] sudoku)
         {
-            for (int i = 0; i < 9; i++)
+            int random = new Random().Next(1,1000000);
+            for (int i = 0; i < size; i++)
             {
                 List<int> numbers = new List<int>();
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < size; j++)
                 {
                     if (sudoku[j, i] != -1)
                     {
@@ -60,14 +74,15 @@ namespace Sudoku_Solver
 
         private static bool CheckBlocks(int[,] sudoku)
         {
-            for (int i = 0; i < 3; i++)
+            int squareRoot = (int)Math.Sqrt(size);
+            for (int i = 0; i < squareRoot; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < squareRoot; j++)
                 {
                     List<int> numbers = new List<int>();
-                    for (int row = i * 3; row < i * 3 + 3; row++)
+                    for (int row = i * squareRoot; row < i * squareRoot + squareRoot; row++)
                     {
-                        for (int column = j * 3; column < j * 3 + 3; column++)
+                        for (int column = j * squareRoot; column < j * squareRoot + squareRoot; column++)
                         {
                             if (sudoku[row, column] != -1)
                             {
