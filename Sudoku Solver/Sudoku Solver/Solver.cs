@@ -23,8 +23,6 @@ namespace Sudoku_Solver
             int[,] sudoku = new int[size, size];
             sudoku = (int[,])_sudoku.Clone();
 
-            Console.WriteLine(counter);
-
             int row, column = 0;
 
             int number = 0;
@@ -33,7 +31,6 @@ namespace Sudoku_Solver
                 for (column = 0; number != -1 && column < size; column++)
                 {
                     number = sudoku[row, column];
-                    Console.WriteLine("Row:" + row + " Col: " + column + " Value: " + number + "    Counter: " + counter);
                 }
             }
             column--;
