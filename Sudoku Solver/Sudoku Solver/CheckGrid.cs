@@ -9,27 +9,27 @@ namespace Sudoku_Solver
 {
     public static class CheckGrid
     {
-        public static bool Check(TextBox[,] textBoxes)
+        public static bool Check(int[,] sudoku)
         {
-            if (!CheckRows(textBoxes))
+            if (!CheckRows(sudoku))
                 return false;
-            if (!CheckColumns(textBoxes))
+            if (!CheckColumns(sudoku))
                 return false;
-            if (!CheckBlocks(textBoxes))
+            if (!CheckBlocks(sudoku))
                 return false;
             return true;
         }
 
-        private static bool CheckRows(TextBox[,] textBoxes)
+        private static bool CheckRows(int[,] sudoku)
         {
             for (int i = 0; i < 9; i++)
             {
                 List<int> numbers = new List<int>();
                 for (int j = 0; j < 9; j++)
                 {
-                    if (textBoxes[i, j].Text != "")
+                    if (sudoku[i, j] != -1)
                     {
-                        int number = Convert.ToInt32(textBoxes[i, j].Text);
+                        int number = Convert.ToInt32(sudoku[i, j]);
                         numbers.Add(number);
                     }
                 }
@@ -39,16 +39,16 @@ namespace Sudoku_Solver
             return true;
         }
 
-        private static bool CheckColumns(TextBox[,] textBoxes)
+        private static bool CheckColumns(int[,] sudoku)
         {
             for (int i = 0; i < 9; i++)
             {
                 List<int> numbers = new List<int>();
                 for (int j = 0; j < 9; j++)
                 {
-                    if (textBoxes[j, i].Text != "")
+                    if (sudoku[j, i] != -1)
                     {
-                        int number = Convert.ToInt32(textBoxes[j, i].Text);
+                        int number = sudoku[j, i];
                         numbers.Add(number);
                     }
                 }
@@ -58,7 +58,7 @@ namespace Sudoku_Solver
             return true;
         }
 
-        private static bool CheckBlocks(TextBox[,] textBoxes)
+        private static bool CheckBlocks(int[,] sudoku)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -69,15 +69,10 @@ namespace Sudoku_Solver
                     {
                         for (int column = j * 3; column < j * 3 + 3; column++)
                         {
-                            if (textBoxes[row, column].Text != "")
+                            if (sudoku[row, column] != -1)
                             {
-                                numbers.Add(Convert.ToInt32(textBoxes[row, column].Text));
+                                numbers.Add(sudoku[row, column]);
                             }
-                            //try
-                            //{
-                            //    numbers.Add(Convert.ToInt32(textBoxes[row, column].Text));
-                            //}
-                            //catch (Exception e) { }
                         }
                     }
 

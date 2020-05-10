@@ -10,50 +10,40 @@ namespace Sudoku_Solver
 {
     class Solver
     {
-
+        private int size = 4;
         //private TextBox[,] textBoxes;
         //private Stack<TextBox[,]> previousTextBoxes = new Stack<TextBox[,]>();
 
-        public Solver(TextBox[,] textBoxes)
+        public Solver()
         {
             //this.textBoxes = textBoxes;
         }
 
-        public bool Solve(TextBox[,] _textBoxes)
+        public bool Solve(int[,] _sudoku)
         {
             //previousTextBoxes.Push((TextBox[,]) textBoxes.Clone());
-            //TextBox[,] textBoxes = new TextBox[9, 9];
-            //textBoxes = (TextBox[,]) _textBoxes.Clone();
-
-            TextBox[,] textBoxes = new TextBox[9, 9];
-            int minX = Math.Min(_textBoxes.GetLength(0), textBoxes.GetLength(0));
-            int minY = Math.Min(_textBoxes.GetLength(1), textBoxes.GetLength(1));
-
-            for (int a = 0; a < minX; ++a)
-                Array.Copy(_textBoxes, a * _textBoxes.GetLength(1), textBoxes, a * textBoxes.GetLength(1), minY);
-
+            int[,] sudoku = new int[size, size];
+            sudoku = (int[,])_sudoku.Clone();
 
             int row, column = 0;
 
-            string number = "-1";
-            for (row = 0; number != "" && row < 9; ++row)
+            int number = 0;
+            for (row = 0; number != -1 && row < size; ++row)
             {
-                for (column = 0; number != "" && column < 9; ++column)
+                for (column = 0; number != -1 && column < size; ++column)
                 {
-                    number = textBoxes[row, column].Text;
-                    Console.WriteLine("Row: " + row + " Col: " + column + " Value: " + number);
+                    number = sudoku[row, column];
                 }
             }
             column--;
             row--;
             int i = 1;
-            while (i < 10)
+            while (i < size + 1)
             {
-                textBoxes[row, column].Text = Convert.ToString(i);
-                if (CheckGrid.Check(textBoxes))
+                sudoku[row, column] = i;
+                if (CheckGrid.Check(sudoku))
                 {
-                    Console.WriteLine("Hij is tot zo ver oplosbaar");
-                    if (Solve(textBoxes))
+                    if (Solve(sudoku))
                         return true;
                 }
 

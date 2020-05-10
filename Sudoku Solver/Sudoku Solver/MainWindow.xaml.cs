@@ -56,29 +56,9 @@ namespace Sudoku_Solver
             }
         }
 
-        private bool IsValidGrid()
+        private bool IsValidGrid(int[,] sudoku)
         {
-            foreach(TextBox textBox in textBoxGrid)
-            {
-                if(textBox.Text != "")
-                {
-                    try
-                    {
-                        int number = Convert.ToInt32(textBox.Text);
-                        if(number < 1 || number > 9)
-                        {
-                            MessageBox.Show("Het getal moet tussen de 0 en 10 zitten.");
-                            return false;
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        MessageBox.Show("De sudoku mag alleen cijfers bevaten");
-                        return false;
-                    }
-                }
-            }
-            if(!CheckGrid.Check(textBoxGrid))
+            if(!CheckGrid.Check(sudoku))
             {
                 MessageBox.Show("De sudoku is niet oplosbaar");
                 return false;
@@ -88,10 +68,11 @@ namespace Sudoku_Solver
 
         private void Solve(object sender, RoutedEventArgs e)
         {
-            if (IsValidGrid())
+            int[,] sudoku = GetSudokuArray(textBoxGrid);
+            if (IsValidGrid(sudoku))
             {
-                solver = new Solver(textBoxGrid);
-                if (solver.Solve(textBoxGrid))
+                solver = new Solver();
+                if (solver.Solve(sudoku))
                 {
                     MessageBox.Show("Solvable");
                 }
@@ -100,6 +81,32 @@ namespace Sudoku_Solver
                     MessageBox.Show("Niet oplosbaar");
                 }
             }
+        }
+
+        private int[,] GetSudokuArray(TextBox[,] textBoxGrid)
+        {
+            int[,] sudoku = new int[9, 9];
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    try
+                    {
+                        if (textBoxGrid[i, j].Text == "")
+                            sudoku[i, j] = -1;
+                        else
+                            sudoku[i, j] = Convert.ToInt32(textBoxGrid[i, j].Text);
+                    }
+                    catch(FormatException e)
+                    {
+                        MessageBox.Show("De sudoku mag alleen cijfers bevaten");
+                    }
+
+                }
+            }
+
+            return sudoku;
         }
     }
 }
