@@ -10,7 +10,7 @@ namespace Sudoku_Solver
     public static class CheckGrid
     {
 
-        private static int size = 9;
+        private static int size = Settings.size;
 
         public static bool IsSolved(int[,] sudoku)
         {
@@ -54,7 +54,6 @@ namespace Sudoku_Solver
 
         private static bool CheckColumns(int[,] sudoku)
         {
-            int random = new Random().Next(1,1000000);
             for (int i = 0; i < size; i++)
             {
                 List<int> numbers = new List<int>();

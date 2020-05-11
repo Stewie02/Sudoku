@@ -10,7 +10,7 @@ namespace Sudoku_Solver
 {
     class Solver
     {
-        private int size = 9;
+        private int size = Settings.size;
         private int[,] solution;
 
         public Solver()
@@ -18,7 +18,7 @@ namespace Sudoku_Solver
             solution = new int[size, size];
 ;        }
 
-        public bool Solve(int[,] _sudoku, int counter)
+        public bool Solve(int[,] _sudoku)
         {
             int[,] sudoku = new int[size, size];
             sudoku = (int[,])_sudoku.Clone();
@@ -49,7 +49,7 @@ namespace Sudoku_Solver
                         return true;
                     }
                     else
-                        solved = Solve(sudoku, counter + 1);
+                        solved = Solve(sudoku);
                 }
 
                 i++;

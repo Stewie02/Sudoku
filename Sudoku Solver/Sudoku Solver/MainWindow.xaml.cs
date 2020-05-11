@@ -21,9 +21,10 @@ namespace Sudoku_Solver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int size = 9;
+        private int size = Settings.size;
         private TextBox[,] textBoxGrid;
         private Solver solver;
+        private bool validSudoku;
 
         public MainWindow()
         {
@@ -70,17 +71,20 @@ namespace Sudoku_Solver
         private void Solve(object sender, RoutedEventArgs e)
         {
             int[,] sudoku = GetSudokuArray(textBoxGrid);
-            if (IsValidGrid(sudoku))
+            if (validSudoku)
             {
-                solver = new Solver();
-                if (solver.Solve(sudoku, 0))
+                if (IsValidGrid(sudoku))
                 {
-                    ShowSolution();
-                    MessageBox.Show("Solvable");
-                }
-                else
-                {
-                    MessageBox.Show("Niet oplosbaar");
+                    solver = new Solver();
+                    if (solver.Solve(sudoku))
+                    {
+                        ShowSolution();
+                        MessageBox.Show("De sudoku is opgelost!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Niet oplosbaar");
+                    }
                 }
             }
         }
@@ -92,7 +96,10 @@ namespace Sudoku_Solver
             {
                 for (int j = 0; j < size; j++)
                 {
-                    textBoxGrid[i, j].Text = solution[i, j].ToString();
+                    if((bool)isNumeric.IsChecked)
+                        textBoxGrid[i, j].Text = solution[i, j].ToString();
+                    else
+                        textBoxGrid[i, j].Text = ((char)(solution[i, j] + 64)).ToString();
                 }
             }
         }
@@ -100,26 +107,47 @@ namespace Sudoku_Solver
         private int[,] GetSudokuArray(TextBox[,] textBoxGrid)
         {
             int[,] sudoku = new int[size, size];
-
-            for (int i = 0; i < size; i++)
+            validSudoku = true;
+            for (int i = 0; i < size && validSudoku; i++)
             {
-                for (int j = 0; j < size; j++)
+                for (int j = 0; j < size && validSudoku; j++)
                 {
-                    try
+                    if ((bool)isNumeric.IsChecked)
+                    {
+                        try
+                        {
+                            if (textBoxGrid[i, j].Text == "")
+                                sudoku[i, j] = -1;
+                            else if (Convert.ToInt32(textBoxGrid[i, j].Text) > 0 && Convert.ToInt32(textBoxGrid[i, j].Text) < Settings.size + 1)
+                                sudoku[i, j] = Convert.ToInt32(textBoxGrid[i, j].Text);
+                            else
+                            {
+                                validSudoku = false;
+                                MessageBox.Show("De getallen moeten tussen de 0 en de " + (Settings.size + 1) + " vallen");
+                            }
+                        }
+                        catch (FormatException e)
+                        {
+                            validSudoku = false;
+                            MessageBox.Show("De sudoku mag alleen cijfers bevaten");
+                        }
+                    }
+                    else
                     {
                         if (textBoxGrid[i, j].Text == "")
                             sudoku[i, j] = -1;
+                        else if ((int)textBoxGrid[i, j].Text.ToUpper()[0] > 64 && (int)textBoxGrid[i, j].Text.ToUpper()[0] < 65 + Settings.size)
+                            sudoku[i, j] = (int)textBoxGrid[i, j].Text.ToUpper()[0] - 64;
                         else
-                            sudoku[i, j] = Convert.ToInt32(textBoxGrid[i, j].Text);
+                        {
+                            validSudoku = false;
+                            MessageBox.Show("De letters moeten tussen de A en de " + (char)(65 + Settings.size) + " vallen");
+                        }
                     }
-                    catch(FormatException e)
-                    {
-                        MessageBox.Show("De sudoku mag alleen cijfers bevaten");
-                    }
+                    
 
                 }
             }
-
             return sudoku;
         }
     }

@@ -9,5 +9,6 @@
     <Grid>
         <Grid x:Name="sudokuGrid" ShowGridLines="True" HorizontalAlignment="Left" Height="700" Margin="34,30,0,0" VerticalAlignment="Top" Width="700"/>
         <Button Content="Los op" Click="Solve" HorizontalAlignment="Left" Margin="901,147,0,0" VerticalAlignment="Top" Width="132" Height="110"/>
+        <CheckBox x:Name="isNumeric" Content="Numeriek" IsChecked="True" HorizontalAlignment="Left" Margin="901,285,0,0" VerticalAlignment="Top" Height="32" Width="116"/>
     </Grid>
 </Window>
